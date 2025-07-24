@@ -9,7 +9,7 @@
 4. Extract region of interest from WGS dataset
 5. QC WGS dataset
 6. Compute [PolyFun priors non-parametrically](https://github.com/omerwe/polyfun/wiki/1.-Computing-prior-causal-probabilities-with-PolyFun#polyfun-approach-3-computing-prior-causal-probabilities-non-parametrically) using WGS datasets.
-7. Peform [functionally-informed finemapping with PolyFun](https://github.com/omerwe/polyfun/wiki/3.-Functionally-informed-fine-mapping-with-finemapper) using different priors.
+7. Perform [functionally-informed finemapping with PolyFun](https://github.com/omerwe/polyfun/wiki/3.-Functionally-informed-fine-mapping-with-finemapper) using different priors.
 
 ## Acknowledgments
 
