@@ -1,0 +1,36 @@
+---
+title: FADS regionplot
+format: gfm
+---
+
+```{r library}
+library(readr)
+library(topr)
+```
+
+```{r sumstats}
+region_files <- list.files(
+    here::here(
+        "data",
+        "processed",
+        "sumstats"
+    ),
+    pattern = "chr11_61000000_63000000",
+    full.names = TRUE
+)
+
+names(region_files) <- c("AFR", "EAS", "HIS", "SAS", "EUR")
+regions <- lapply(region_files, read_tsv)
+```
+
+```{r regionplot}
+#| fig.width: 8
+#| fig.height: 5
+#| dpi: 218
+regionplot(
+    regions,
+    legend_labels = names(regions),
+    show_overview = FALSE,
+    gene = "FADS1"
+)
+```

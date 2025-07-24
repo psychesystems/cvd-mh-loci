@@ -1,11 +1,14 @@
 # Multi-ancestry finemapping of gene clusters implicated in cardiovascular disease and mental health
 
+**Region of interest**: `chr11_61000000-63000000`
+
+![](notebooks/MDD_GWAS/FADS_regionplot_files/figure-commonmark/regionplot-1.png)
+
 ## Analysis plan
 
-1. Extract region of interest from MDD sumstats.
-2. Liftover MDD sumstats to build 38.
-3. Multi-ancestry finemapping using [SuSiEx](https://github.com/getian107/SuSiEx) with standard reference panels.
-4. Run [PolyFun with precomputed priors](https://github.com/omerwe/polyfun/wiki/1.-Computing-prior-causal-probabilities-with-PolyFun#polyfun-approach-1-using-precomputed-prior-causal-probabilities-based-on-a-meta-analysis-of-15-uk-biobank-traits).
+1. Extract region of interest from MDD sumstats. Liftover MDD sumstats to build 38: [GWAS FADS region notebook](notebooks/MDD_GWAS/FADS_region.ipynb)
+2. Multi-ancestry finemapping using [SuSiEx](https://github.com/getian107/SuSiEx) with standard reference panels.
+3. Run [PolyFun with precomputed priors](https://github.com/omerwe/polyfun/wiki/1.-Computing-prior-causal-probabilities-with-PolyFun#polyfun-approach-1-using-precomputed-prior-causal-probabilities-based-on-a-meta-analysis-of-15-uk-biobank-traits).
 4. Extract region of interest from WGS dataset
 5. QC WGS dataset
 6. Compute [PolyFun priors non-parametrically](https://github.com/omerwe/polyfun/wiki/1.-Computing-prior-causal-probabilities-with-PolyFun#polyfun-approach-3-computing-prior-causal-probabilities-non-parametrically) using WGS datasets.
