@@ -1,0 +1,14 @@
+[workspace]
+authors = ["Mark James Adams <mark.adams@ed.ac.uk>"]
+channels = ["conda-forge", "bioconda"]
+name = "cvd-mh-loci"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+polars = ">=1.31.0,<2"
+bcftools = ">=1.22,<2"
+jupyter = ">=1.1.1,<2"
+pyprojroot = ">=0.3.0,<0.4"
