@@ -165,6 +165,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pickleshare-0.7.5-pyhd8ed1ab_1004.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/pixman-0.46.4-h537e5f6_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.3.8-pyhe01879c_0.conda
+      - conda: https://conda.anaconda.org/bioconda/linux-64/plink-1.90b7.7-h18e278d_1.tar.bz2
+      - conda: https://conda.anaconda.org/bioconda/linux-64/plink2-2.0.0a.6.9-h9948957_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/polars-1.31.0-default_h70f2ef1_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/polars-default-1.31.0-py39hf521cc8_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/prometheus_client-0.22.1-pyhd8ed1ab_0.conda
@@ -2094,6 +2096,26 @@ packages:
   license_family: MIT
   size: 23531
   timestamp: 1746710438805
+- conda: https://conda.anaconda.org/bioconda/linux-64/plink-1.90b7.7-h18e278d_1.tar.bz2
+  sha256: 68f21f628450b7a41602c82b15a909099b06c4fe63dd0dec5834f5978e614031
+  md5: 1ab1ae7b594fcb5b98cd1a5b96137aa8
+  depends:
+  - libgcc >=13
+  - libopenblas
+  - libstdcxx >=13
+  - libzlib >=1.3.1,<2.0a0
+  license: GPL
+  size: 963787
+  timestamp: 1742298270545
+- conda: https://conda.anaconda.org/bioconda/linux-64/plink2-2.0.0a.6.9-h9948957_0.tar.bz2
+  sha256: 8f9b2415a5035b5019ef83d2db6f6af2b9739796186a3e558a7baf69c14b0b6b
+  md5: b9e94cb7fa3bb4353c68e4c553690245
+  depends:
+  - libgcc >=13
+  - libstdcxx >=13
+  license: GPL-3
+  size: 7612061
+  timestamp: 1744207773346
 - conda: https://conda.anaconda.org/conda-forge/linux-64/polars-1.31.0-default_h70f2ef1_1.conda
   sha256: c3b5c32546ecd37261443f8d614e792e42f07ecd359d1b320d0c6b9ab785f1ba
   md5: 0217d9e4176cf33942996a7ee3afac0e
