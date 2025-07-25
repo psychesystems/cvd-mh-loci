@@ -1,0 +1,3 @@
+[submodule "vendor/SuSiEx"]
+	path = vendor/SuSiEx
+	url = https://github.com/getian107/SuSiEx
