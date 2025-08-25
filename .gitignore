@@ -2,7 +2,7 @@ data
 *.gz
 *.csv
 *.tsv
-
+vendor/finemap
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
