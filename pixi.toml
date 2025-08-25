@@ -16,3 +16,39 @@ r-base = ">=4.5.1,<4.6"
 quarto = ">=1.7.32,<2"
 plink2 = ">=2.0.0a.6.9,<3"
 plink = ">=1.90b7.7,<2"
+
+[feature.polyfun]
+channels = ["conda-forge", "nodefaults"]
+
+[feature.polyfun.dependencies]
+tqdm = "*"
+r-wavethresh = "*"
+pyarrow = ">=3.0"
+python = "3.8.*"
+scikit-learn = "*"
+r-lattice = "*"
+"r-ckmeans.1d.dp" = "*"
+r-stringi = "*"
+bitarray = "*"
+r-base = "*"
+r = "*"
+r-matrixstats = "*"
+networkx = "*"
+rpy2 = "<3.5.7|>=3.5.9"
+scipy = "*"
+r-devtools = "*"
+numpy = ">=1.20"
+pandas = "*"
+r-expm = "*"
+pandas-plink = "*"
+pip = "*"
+r-susier = "==0.11.92"
+packaging = "*"
+jupyter = ">=1.1.1,<2"
+pyprojroot = ">=0.3.0,<0.4"
+
+[feature.polyfun.pypi-dependencies]
+bgen = "==1.2.10"
+
+[environments]
+polyfun = { features = ["polyfun"], no-default-feature = true }

@@ -1,3 +1,6 @@
 [submodule "vendor/SuSiEx"]
 	path = vendor/SuSiEx
 	url = https://github.com/getian107/SuSiEx
+[submodule "vendor/polyfun"]
+	path = vendor/polyfun
+	url = git@github.com:omerwe/polyfun.git
