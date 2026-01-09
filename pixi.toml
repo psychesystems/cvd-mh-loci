@@ -2,7 +2,7 @@
 authors = ["Mark James Adams <mark.adams@ed.ac.uk>"]
 channels = ["conda-forge", "bioconda"]
 name = "cvd-mh-loci"
-platforms = ["linux-64"]
+platforms = ["linux-64", "osx-arm64"]
 version = "0.1.0"
 
 [tasks]
