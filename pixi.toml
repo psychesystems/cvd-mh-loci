@@ -12,13 +12,16 @@ polars = ">=1.31.0,<2"
 bcftools = ">=1.22,<2"
 jupyter = ">=1.1.1,<2"
 pyprojroot = ">=0.3.0,<0.4"
-r-base = ">=4.5.1,<4.6"
+r-base = ">=4.4.1,<4.5"
 quarto = ">=1.7.32,<2"
+
+[target.linux-64.dependencies]
 plink2 = ">=2.0.0a.6.9,<3"
 plink = ">=1.90b7.7,<2"
 
 [feature.polyfun]
 channels = ["conda-forge", "nodefaults"]
+platforms = ["linux-64"]
 
 [feature.polyfun.dependencies]
 tqdm = "*"
