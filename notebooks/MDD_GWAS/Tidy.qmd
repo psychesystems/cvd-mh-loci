@@ -1,0 +1,52 @@
+---
+title: Tidy and liftover sumstats
+---
+
+```{r library}
+library(tidyGWAS)
+library(stringr)
+```
+
+```
+curl -O https://zenodo.org/records/16639374/files/dbSNP155.tar
+tar -xvf dbSNP155.tar
+mv dbSNP155 data/reference/dbSNP
+```
+
+```{r mdd2025}
+mdd2025_eur <- tidyGWAS(
+    here::here("data/raw/sumstats/daner_pgc_mdd_full_eur_hg19_v3.49.24.11.neff.gz"),
+    column_names = list(
+        POS = "BP",
+        EAF = "FRQ_U_3362335",
+        CaseN = "Nca",
+        ControlN = "Nco",
+        N = "Neff"
+    ),
+    dbsnp_path = here::here("data/reference/dbSNP/dbSNP155"),
+    logfile = TRUE,
+    output_dir = here::here("data/processed/sumstats/tidy/mdd2025_eur")
+)
+```
+
+```{r mdd2024}
+for(cluster in c("AFR", "EAS", "HIS", "SAS")) {
+    mdd2024 <- tidyGWAS(
+    here::here(str_glue("data/raw/sumstats/mdd2023diverse_{cluster}_Neff.csv.gz")),
+    column_names = list(
+        CHR = "Chromosome",
+        POS = "Position",
+        CaseN = "Ncase",
+        ControlN = "Ncontrol",
+        N = "Neff"
+    ),
+    dbsnp_path = here::here("data/reference/dbSNP/dbSNP155"),
+    logfile = TRUE,
+    output_dir = here::here(
+        str_glue(
+            "data/processed/sumstats/tidy/mdd2024_{str_to_lower(cluster)}"
+        )
+    )
+)
+}
+```
