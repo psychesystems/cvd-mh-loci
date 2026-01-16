@@ -21,7 +21,7 @@ mdd2025_eur <- tidyGWAS(
         EAF = "FRQ_U_3362335",
         CaseN = "Nca",
         ControlN = "Nco",
-        N = "Neff"
+        EffectiveN = "Neff"
     ),
     dbsnp_path = here::here("data/reference/dbSNP/dbSNP155"),
     logfile = TRUE,
@@ -32,21 +32,22 @@ mdd2025_eur <- tidyGWAS(
 ```{r mdd2024}
 for(cluster in c("AFR", "EAS", "HIS", "SAS")) {
     mdd2024 <- tidyGWAS(
-    here::here(str_glue("data/raw/sumstats/mdd2023diverse_{cluster}_Neff.csv.gz")),
-    column_names = list(
-        CHR = "Chromosome",
-        POS = "Position",
-        CaseN = "Ncase",
-        ControlN = "Ncontrol",
-        N = "Neff"
-    ),
-    dbsnp_path = here::here("data/reference/dbSNP/dbSNP155"),
-    logfile = TRUE,
-    output_dir = here::here(
-        str_glue(
-            "data/processed/sumstats/tidy/mdd2024_{str_to_lower(cluster)}"
+        here::here(str_glue("data/raw/sumstats/mdd2023diverse_{cluster}_Neff.csv.gz")),
+        column_names = list(
+            CHR = "Chromosome",
+            POS = "Position",
+            B = "logOR",
+            CaseN = "Ncase",
+            ControlN = "Ncontrol",
+            EffectiveN = "Neff"
+        ),
+        dbsnp_path = here::here("data/reference/dbSNP/dbSNP155"),
+        logfile = TRUE,
+        output_dir = here::here(
+            str_glue(
+                "data/processed/sumstats/tidy/mdd2024_{str_to_lower(cluster)}"
+            )
         )
     )
-)
 }
 ```
