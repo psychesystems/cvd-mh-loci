@@ -3,6 +3,9 @@ title: Tidy and liftover sumstats
 ---
 
 ```{r library}
+if(!require(tidyGWAS)) {
+    remotes::install_github("ararder/tidyGWAS")
+}
 library(tidyGWAS)
 library(stringr)
 ```
