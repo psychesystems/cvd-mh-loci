@@ -10,9 +10,9 @@ format:
   pdf:
     sansfont: "Crimson Pro"
 reference-location: margin
-citation-location: margin
+citation-location: document
 bibliography: ref.bib
-csl: nature-neuroscience-brief-communications.csl
+csl: human-genetics.csl
 ---
 
 <!-- layout information: https://quarto-dev.github.io/quarto-gallery/page-layout/tufte.html -->
@@ -40,10 +40,6 @@ The role of FADS as the genes underlying the association with major depression i
 
 Prior studies examining specific FADS genetic variants and depression [@Cribb14092018;@Sublette_FADS_2016] had small sample sizes (N $\approx$ 200–1000). Large genome-wide association studies (GWASs) have identified a strong association signal in this region, but the most significant variant has been located in other nearby genes like DAGLA [@howard.d.adams.m.ea:genome-wide;@meng:gwas:2024] and TMEM258 [@levey:mvp:2021;@als:gwas:2023]. However, the most recent and largest multi-ancestry genetic study of depression found the top signal to be a single nucleotide intron variant in FADS2 (@fig-fads_mdd2025). 
 
-## Fine-mapping
-
-Because genetic variants in a region are in close physical linkage, association studies find a correlated statistical signal across variants that makes it difficult to determine which variant is the cause of the association. Fine-mapping is the process of comparing the linkage and association signals to determine the probability that each SNP is the causal SNP. Fine-mapping can be enhanced by considering prior causal probabilities based on functional annotations (such as a coding or regulatory function, or evidence of mutational constraint).
-
 
 
 ```{r}
@@ -66,7 +62,48 @@ regionplot(
 )
 ```
 
+## Finemapping
+
+Because genetic variants in a region are in close physical linkage, association studies find a correlated statistical signal across variants that makes it difficult to determine which variant is the cause of the association. Finemapping is the process of comparing the linkage and association signals to determine the probability that each SNP is the causal SNP. Finemapping can be enhanced by considering prior causal probabilities based on functional annotations (such as a coding or regulatory function, or evidence of mutational constraint).
+
+Previous investigations of this region used (1) association summary statistics from European-ancestry cohorts only and (2) summary statistics from all ancestry groups merged together.  Pre-computed information from UK Biobank was used and and it was assumed that the region only had a single causal variant. This latter assumption was stipulated because it does not require that the linkage disequilibrium estimates be population accurate. The assumption of a single causal variant was also reasonable given that the conditional-and-joint analysis (which tests whether each other variant is still significant after controlling for the top associated variant in the region) did not indicate the presance of multiple causal variants.
+
+:::{.column-margin}
+- [rs28456](https://www.ncbi.nlm.nih.gov/snp/rs28456): an intron variant in the [FADS2](https://www.ncbi.nlm.nih.gov/gene/9415) gene and the uncharacterised gene [LOC124902680](https://www.ncbi.nlm.nih.gov/gene/?term=LOC124902680);  PIP = 0.122.
+- [rs174544](https://www.ncbi.nlm.nih.gov/snp/rs174544): a variant in $3^\prime$ untranslated region of [FADS1](https://www.ncbi.nlm.nih.gov/gene/3992); PIP = 0.181.
+:::
+
+However, this analysis did not identify a variant that met the finemapping identification criterion, which was a posterior inclusion probability (PIP) $> 0.95$. The top variants identified in the multi-ancestry analysis were rs28456 and rs174544.
+
+
+## Rare variant burden 
+
+An analysis to look for the effect of rare variants on major depression and on metabolite levels has also been conducted [@nisbit:fads:wcpg2025]. This study used short read whole genome sequencing (srWGS) datasets from All of  Us and UK Biobank. It considered metabolic measures that had been associated with major depression (Omega 3, Omega 3 percentage, Docosahexaenoic acid , Omega 6/Omega 3 ratio and Degree of Unsaturation.).  The authors found that rare variant burden was significantly associated with all tested metabolite measures but was not associated with major depression. This indicates that the GWAS association is likely to caused by a common variant than being a proxy for a rare variant.
+
+# Analyses
+
+In this project I aimed to discover more about causal variants in the FADS region using mult-ancestry and whole-genome sequencing datasets. Initial analysis improved on previous methods in three ways:
+
+- Rather than using summary statistics from merged ancestries, use summary statistics from the single largest ancestry group with a matched reference panel to test for multiple causal variants.
+- Use disaggregated summary statistics from multiple ancestries to improve finemapping.
+- Use a large, multi-ancestry-matched WGS dataset as an improve reference panel for finemapping. 
+
+All analyses were focused on the FADS gene region chr11:61400000-61700000 using summary statistics from Adams (2025) and Meng (2024). The ancestry clusters used were dervied from continental reference populations, namely African (AFR), Admixed American/Hispanic/Latino (AMR), East Asian (EAS), European (EUR), and South Asian (SAS). I conducted finemapping using PolyFun [@Weissbrod:PolyFun:2020].
+
+## Test for multiple causal variants
+
+
+
+## Multi-ancestry finemapping
+
+## WGS reference dataset
+
 
 ## Acknowledgments 
 
-This work was supported by a  BHF REA4 Pump Priming Award (RE/24/130012).
+This work was supported by a BHF REA4 Pump Priming Award (RE/24/130012).
+
+## References
+
+::: {#refs}
+:::
