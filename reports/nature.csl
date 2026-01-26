@@ -171,7 +171,6 @@
       <text variable="citation-number" suffix="."/>
       <group delimiter=" ">
         <text macro="author" suffix="."/>
-        <text macro="title" suffix="."/>
         <choose>
           <if type="chapter paper-conference" match="any">
             <text term="in"/>
@@ -179,8 +178,6 @@
         </choose>
         <text macro="container-title"/>
         <text macro="editor"/>
-        <text macro="volume"/>
-        <text variable="page"/>
         <text macro="issuance"/>
         <text macro="access"/>
       </group>
