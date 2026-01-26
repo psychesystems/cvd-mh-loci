@@ -7,15 +7,12 @@ execute:
   warning: false
   message: false
 format:
-  html:
-    grid:
-      margin-width: 350px
   pdf:
     sansfont: "Crimson Pro"
 reference-location: margin
 citation-location: margin
 bibliography: ref.bib
-csl: nature.csl
+csl: nature-neuroscience-brief-communications.csl
 ---
 
 <!-- layout information: https://quarto-dev.github.io/quarto-gallery/page-layout/tufte.html -->
@@ -37,16 +34,22 @@ mdd2025 <- read_parquet(here::here("data/raw/sumstats/daner_pgc_mdd_full_div_hg1
 
 The fatty acid desaturase gene family (FADS1, FADS2, FADS3) is co-located in a gene-dense region on chromosome 11 (11q12-q13.1). FADS1 and FADS2 regulate the conversion of polyunsaturated fatty acids (omega-6 and -3) into long-chain forms, which have roles in a wide range of cellular processes and are implicated in cardiovascular, metabolic, and immunological health [@Koletzko_FADS_2019].
 
-The role of FADS as the genes underlying the association with major depression is bolstered by a genetic causal analysis (Mendelian randomisation) of circulating metabolites [@davyson.e.shen.x:metabolomic], which showed that omega-3 levels and omega-6 to omega-3 ratios had a causal effect on depression. While this makes FADS1 and FADS2 the most plausible biological candidates, expression levels of other genes in this region (MYRF and TMEM258) also have possible links to depression. Further work is therefore required to pinpoint the causal variant driving the association.
+The role of FADS as the genes underlying the association with major depression is bolstered by a genetic causal analysis (Mendelian randomisation) of circulating metabolites [@davyson_metabolomic], which showed that omega-3 levels and omega-6 to omega-3 ratios had a causal effect on depression. While this makes FADS1 and FADS2 the most plausible biological candidates, expression levels of other genes in this region (MYRF and TMEM258) also have possible links to depression. Further work is therefore required to pinpoint the causal variant driving the association.
 
 ## Genetic associations
 
-Prior studies examining specific FADS genetic variants and depression [@Cribb14092018;@Sublette_FADS_2016] had small sample sizes (N $\approx$ 200–1000). Large genome-wide association studies (GWASs) have identified a strong association signal in this region, but the most significant variant has been located in other nearby genes like DAGLA (Howard 2018; Meng 2024) and TMEM258 (Levey 2021; Als 2023). However, the most recent and largest multi-ancestry genetic study of depression (Adams 2025) found the top signal to be a single nucleotide intron variant in FADS2.
+Prior studies examining specific FADS genetic variants and depression [@Cribb14092018;@Sublette_FADS_2016] had small sample sizes (N $\approx$ 200–1000). Large genome-wide association studies (GWASs) have identified a strong association signal in this region, but the most significant variant has been located in other nearby genes like DAGLA [@howard.d.adams.m.ea:genome-wide;@meng:gwas:2024] and TMEM258 [@levey:mvp:2021;@als:gwas:2023]. However, the most recent and largest multi-ancestry genetic study of depression found the top signal to be a single nucleotide intron variant in FADS2 (@fig-fads_mdd2025). 
+
+## Fine-mapping
+
+Because genetic variants in a region are in close physical linkage, association studies find a correlated statistical signal across variants that makes it difficult to determine which variant is the cause of the association. Fine-mapping is the process of comparing the linkage and association signals to determine the probability that each SNP is the causal SNP. Fine-mapping can be enhanced by considering prior causal probabilities based on functional annotations (such as a coding or regulatory function, or evidence of mutational constraint).
+
+
 
 ```{r}
 #| label: fig-fads_mdd2025
 #| cache: true
-#| fig-cap: "Region plot of genomewide association findings for the FADS gene cluster."
+#| fig-cap: "Region plot of genomewide association findings for the FADS gene cluster. Top: Tested variants with transformed association p-value. Bottom: Gene positions in the region."
 #| fig-width: 11
 #| fig-height: 6
 #| fig-column: page-right
