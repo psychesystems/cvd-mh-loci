@@ -9,6 +9,7 @@ execute:
 format:
   pdf:
     sansfont: "Crimson Pro"
+    df-print: kable
 reference-location: margin
 citation-location: document
 bibliography: ref.bib
@@ -68,12 +69,12 @@ Because genetic variants in a region are in close physical linkage, association 
 
 Previous investigations of this region used (1) association summary statistics from European-ancestry cohorts only and (2) summary statistics from all ancestry groups merged together.  Pre-computed information from UK Biobank was used and and it was assumed that the region only had a single causal variant. This latter assumption was stipulated because it does not require that the linkage disequilibrium estimates be population accurate. The assumption of a single causal variant was also reasonable given that the conditional-and-joint analysis (which tests whether each other variant is still significant after controlling for the top associated variant in the region) did not indicate the presance of multiple causal variants.
 
-:::{.column-margin}
-- [rs28456](https://www.ncbi.nlm.nih.gov/snp/rs28456): an intron variant in the [FADS2](https://www.ncbi.nlm.nih.gov/gene/9415) gene and the uncharacterised gene [LOC124902680](https://www.ncbi.nlm.nih.gov/gene/?term=LOC124902680);  PIP = 0.122.
-- [rs174544](https://www.ncbi.nlm.nih.gov/snp/rs174544): a variant in $3^\prime$ untranslated region of [FADS1](https://www.ncbi.nlm.nih.gov/gene/3992); PIP = 0.181.
-:::
+However, this analysis did not identify a variant that met the finemapping identification criterion, which was a posterior inclusion probability (PIP) $> 0.95$. The most significant variant in the multi-ancestry analysis was rs28456 [^rs28456] while the finemapping analysis selected rs174544 [^rs174544] as the more likely causal SNP.
 
-However, this analysis did not identify a variant that met the finemapping identification criterion, which was a posterior inclusion probability (PIP) $> 0.95$. The top variants identified in the multi-ancestry analysis were rs28456 and rs174544.
+[^rs28456]: [rs28456](https://www.ncbi.nlm.nih.gov/snp/rs28456): an intron variant in the [FADS2](https://www.ncbi.nlm.nih.gov/gene/9415) gene and the uncharacterised gene [LOC124902680](https://www.ncbi.nlm.nih.gov/gene/?term=LOC124902680);  PIP = 0.122.
+[^rs174544]: [rs174544](https://www.ncbi.nlm.nih.gov/snp/rs174544): a variant in $3^\prime$ untranslated region of [FADS1](https://www.ncbi.nlm.nih.gov/gene/3992); PIP = 0.181.
+
+
 
 
 ## Rare variant burden 
@@ -88,11 +89,45 @@ In this project I aimed to discover more about causal variants in the FADS regio
 - Use disaggregated summary statistics from multiple ancestries to improve finemapping.
 - Use a large, multi-ancestry-matched WGS dataset as an improve reference panel for finemapping. 
 
-All analyses were focused on the FADS gene region chr11:61400000-61700000 using summary statistics from Adams (2025) and Meng (2024). The ancestry clusters used were dervied from continental reference populations, namely African (AFR), Admixed American/Hispanic/Latino (AMR), East Asian (EAS), European (EUR), and South Asian (SAS). I conducted finemapping using PolyFun [@Weissbrod:PolyFun:2020].
+All analyses were focused on the FADS gene region `chr11:61400000-61700000` using summary statistics from Adams [-@Adams_MDD2025_Cell] and Meng [-@meng:gwas:2024]. The ancestry clusters used were dervied from continental reference populations, namely African (AFR), Admixed American/Hispanic/Latino (AMR), East Asian (EAS), European (EUR), and South Asian (SAS). I conducted finemapping using PolyFun [@Weissbrod:PolyFun:2020].
+
+Finemapping attempts to identify "credible causal sets", which are a group of variants that collectively capture an association signal in a region of the genome. The variants are ranked by the a posterior inclusion probability (PIP), which combines the prior functional probabilites with the data to determine a posterior causal probability for each variant. A PIP > 0.95 is typically taken as sufficient to identify the causal SNP, but values less than this are still useful for narrowing down the set of potentially causal variants. 
 
 ## Test for multiple causal variants
 
+Testing for multiple causal variants requires an ancestry-matched reference panel. I started with the standard reference panel from the 1000 Genomes Project [@the_1000_genomes_project_consortium_global_2015]. I used prior probability information from PolyFun [@Weissbrod:PolyFun:2020] and then performed finemapping using FINEMAP [@Benner:FINEMAP:2016] on the European-ancestry cluster association summary statistics (N cases = 525,197; N controls = 3,362,335).
 
+```{r}
+#| label: polyfun_eur_ref
+polyfun_eur_ref <- read_tsv(here::here("reports/tables/PolyFun/mdd2025_eur_all_hg19_polyfun_finemap_chr11_61400000-61700000.tsv"))
+
+# get credible sets
+polyfun_eur_ref_cs <- polyfun_eur_ref |>
+  filter(CREDIBLE_SET != 0)
+```
+
+The finemapping analysis found three credible causal sets which contained 6, 2, and 175 variants respectively (@tbl-finemap-eur-ref). While no SNP had a PIP > 0.95, this analysis supports the conclusion that there are multiple causal variants in the FADS region. The third credible causal set (CCS) contained the SNP (rs174544) that was the top finemapped variant in the published analysis while also containing MYRF [^MYRF] intron variants. The first CCS contained SNPs that were primarily in FADS2 introns, but there was one variant (rs174567) that was an upstream transcript variant. The second CCS contained intron variants in DAGLA.[^DAGLA]
+
+[^MYRF]: [MYRF](https://www.ncbi.nlm.nih.gov/datasets/gene/745/): myelin regulatory factor.
+[^DAGLA]: [DAGLA](https://www.ncbi.nlm.nih.gov/datasets/gene/747/): diacylglycerol lipase alpha, involved in biosynthesis of endocannabinoid ligands.
+
+
+```{r}
+#| label: tbl-finemap-eur-ref
+#| tbl-cap: Top five SNPs with highest posterior inclusion probability (PIP) in each credible causal set from finemapping of European-ancestry cluster with 1000 Genomes reference panel.
+
+polyfun_eur_ref_cs |>
+  group_by(CREDIBLE_SET) |>
+  arrange(CREDIBLE_SET, desc(PIP)) |>
+  slice_head(n = 5)|>
+  arrange(CREDIBLE_SET, BP) |>
+  select( 
+    `Credible set` = CREDIBLE_SET,
+    SNP,
+    `Position (b37)` = BP,
+    PIP
+  )
+```
 
 ## Multi-ancestry finemapping
 
