@@ -21,6 +21,7 @@ csl: human-genetics.csl
 A genomic region containing a cluster of genes that regulate fatty acid desaturation has recently been found to have a strong association with major depressive disorder [@Adams_MDD2025_Cell]. However, it is unclear which variant in this region is the cause of the association. This project will use biobank whole genome-sequencing datasets to finemap common variants, catalogue rare variants, and understand shared genetic risk between cardiovascular disease and common psychiatric disorders.
 
 ```{r library}
+library(myvariant)
 library(dplyr)
 library(readr)
 library(arrow)
@@ -40,8 +41,6 @@ The role of FADS as the genes underlying the association with major depression i
 ## Genetic associations
 
 Prior studies examining specific FADS genetic variants and depression [@Cribb14092018;@Sublette_FADS_2016] had small sample sizes (N $\approx$ 200–1000). Large genome-wide association studies (GWASs) have identified a strong association signal in this region, but the most significant variant has been located in other nearby genes like DAGLA [@howard.d.adams.m.ea:genome-wide;@meng:gwas:2024] and TMEM258 [@levey:mvp:2021;@als:gwas:2023]. However, the most recent and largest multi-ancestry genetic study of depression found the top signal to be a single nucleotide intron variant in FADS2 (@fig-fads_mdd2025). 
-
-
 
 ```{r}
 #| label: fig-fads_mdd2025
@@ -63,6 +62,21 @@ regionplot(
 )
 ```
 
+```{r variants}
+#| cache: true
+# look up functional information
+fads_region_snps <- mdd2025 |>
+  filter(CHR == 11, between(BP, 61380730, 61678348)) |>
+  pull(SNP)
+
+fads_region_annotations <- getVariants(
+  fads_region_snps,
+  fields = c("dbsnp","clinvar","cadd","snpeff")
+)
+```
+
+```
+
 ## Finemapping
 
 Because genetic variants in a region are in close physical linkage, association studies find a correlated statistical signal across variants that makes it difficult to determine which variant is the cause of the association. Finemapping is the process of comparing the linkage and association signals to determine the probability that each SNP is the causal SNP. Finemapping can be enhanced by considering prior causal probabilities based on functional annotations (such as a coding or regulatory function, or evidence of mutational constraint).
@@ -75,8 +89,6 @@ However, this analysis did not identify a variant that met the finemapping ident
 [^rs174544]: [rs174544](https://www.ncbi.nlm.nih.gov/snp/rs174544): a variant in $3^\prime$ untranslated region of [FADS1](https://www.ncbi.nlm.nih.gov/gene/3992); PIP = 0.181.
 
 
-
-
 ## Rare variant burden 
 
 An analysis to look for the effect of rare variants on major depression and on metabolite levels has also been conducted [@nisbit:fads:wcpg2025]. This study used short read whole genome sequencing (srWGS) datasets from All of  Us and UK Biobank. It considered metabolic measures that had been associated with major depression (Omega 3, Omega 3 percentage, Docosahexaenoic acid , Omega 6/Omega 3 ratio and Degree of Unsaturation.).  The authors found that rare variant burden was significantly associated with all tested metabolite measures but was not associated with major depression. This indicates that the GWAS association is likely to caused by a common variant than being a proxy for a rare variant.
@@ -87,9 +99,9 @@ In this project I aimed to discover more about causal variants in the FADS regio
 
 - Rather than using summary statistics from merged ancestries, use summary statistics from the single largest ancestry group with a matched reference panel to test for multiple causal variants.
 - Use disaggregated summary statistics from multiple ancestries to improve finemapping.
-- Use a large, multi-ancestry-matched WGS dataset as an improve reference panel for finemapping. 
+- Use a large, multi-ancestry-matched WGS dataset as an improved reference panel for finemapping. 
 
-All analyses were focused on the FADS gene region `chr11:61400000-61700000` using summary statistics from Adams [-@Adams_MDD2025_Cell] and Meng [-@meng:gwas:2024]. The ancestry clusters used were dervied from continental reference populations, namely African (AFR), Admixed American/Hispanic/Latino (AMR), East Asian (EAS), European (EUR), and South Asian (SAS). I conducted finemapping using PolyFun [@Weissbrod:PolyFun:2020].
+All analyses were focused on the FADS gene region `chr11:61400000-61700000` using summary statistics from Adams [-@Adams_MDD2025_Cell] and Meng [-@meng:gwas:2024]. The ancestry clusters used were dervied from continental reference populations, namely African (AFR), Admixed American/Hispanic/Latino (AMR), East Asian (EAS), European (EUR), and South Asian (SAS). I conducted functionally-informed finemapping using PolyFun [@Weissbrod:PolyFun:2020] and multi-ancestry finemapping with SuSiEx [@Yuan:SuSiEx:2024]. I looked up variant functional annotations using the myvariant package [@mark:myvariant:2024].
 
 Finemapping attempts to identify "credible causal sets", which are a group of variants that collectively capture an association signal in a region of the genome. The variants are ranked by the a posterior inclusion probability (PIP), which combines the prior functional probabilites with the data to determine a posterior causal probability for each variant. A PIP > 0.95 is typically taken as sufficient to identify the causal SNP, but values less than this are still useful for narrowing down the set of potentially causal variants. 
 
@@ -120,19 +132,79 @@ polyfun_eur_ref_cs |>
   group_by(CREDIBLE_SET) |>
   arrange(CREDIBLE_SET, desc(PIP)) |>
   slice_head(n = 5)|>
+  ungroup() |>
   arrange(CREDIBLE_SET, BP) |>
-  select( 
+  transmute( 
     `Credible set` = CREDIBLE_SET,
     SNP,
     `Position (b37)` = BP,
-    PIP
+    PIP = round(PIP, 3)
   )
+```
+
+
+## Improving the reference dataset
+
+While standard reference samples like 1000 Genomes [@the_1000_genomes_project_consortium_global_2015] are convenient for downstream analysis, the small panel sizes are suboptimal for finemapping [@Benner:finemapping:2017]. To improve on this, I used a much larger whole genome sequencing dataset from the All of Us cohort [@Bick:AllofUsGenomics:2024]. I used the short read whole genome sequencing (srWGS) dataset version 8 that had been filtered for allele frequency and allele count, which matches the complement of variants typically found in a GWAS. I matched the MDD summary statistics to each ancestry cluster and randomly extracted up to 10,000 participants from each cluster to compose the linkage disequilibrium reference panel.
+
+The improved reference dataset identified 1--4 credible causal sets for each ancestry cluster (@tbl-polyfun-aou). The highest PIP (= 0.718) was for rs7115739 [^rs7115739] in the EAS cluster. While still not conclusive, the findings had higher posterior causal probabilities compared to the standard reference panel analysis (for example, PIP for rs12805732 in the EUR cluster $0.336 \rightarrow 0.446$).
+
+[^rs7115739]: [rs7115739](https://www.ncbi.nlm.nih.gov/snp/rs7115739), intron variant in [FADS3](https://www.ncbi.nlm.nih.gov/gene/3995).
+
+```{r}
+#| label: tbl-polyfun-aou
+#| tbl-cap: Top SNP with highest posterior inclusion probability (PIP) in each credible causal set from finemapping of each ancestry clusters using All of Us WGS as the reference panel.
+afr_acaf_polyfun <- read_tsv(here::here("reports/tables/PolyFun/mdd2024_afr_polyfun_finemap_acaf_hg38_chr11_61600000-6200000.tsv"))
+eas_acaf_polyfun <- read_tsv(here::here("reports/tables/PolyFun/mdd2024_eas_polyfun_finemap_acaf_hg38_chr11_61600000-6200000.tsv"))
+amr_acaf_polyfun <- read_tsv(here::here("reports/tables/PolyFun/mdd2024_his_polyfun_finemap_acaf_hg38_chr11_61600000-6200000.tsv"))
+sas_acaf_polyfun <- read_tsv(here::here("reports/tables/PolyFun/mdd2024_sas_polyfun_finemap_acaf_hg38_chr11_61600000-6200000.tsv"))
+eur_acaf_polyfun <- read_tsv(here::here("reports/tables/PolyFun/mdd2025_eur_polyfun_finemap_acaf_hg38_chr11_61600000-6200000.tsv"))
+
+acaf_polyfun_list = list(
+  AFR = afr_acaf_polyfun,
+  AMR = amr_acaf_polyfun,
+  EAS = eas_acaf_polyfun,
+  EUR = eur_acaf_polyfun,
+  SAS = sas_acaf_polyfun
+)
+
+acaf_polyfun <- bind_rows(acaf_polyfun_list, .id = "cluster")
+
+acaf_polyfun |>
+  filter(CREDIBLE_SET != 0) |>
+  group_by(cluster, CREDIBLE_SET) |>
+  filter(PIP == max(PIP)) |>
+  ungroup() |>
+  arrange(cluster, CREDIBLE_SET) |>
+  transmute(
+    Cluster = cluster,
+    `Credible set` = CREDIBLE_SET,
+    SNP,
+    `Position (b38)` = BP,
+    PIP = round(PIP, 3)
+  ) 
 ```
 
 ## Multi-ancestry finemapping
 
-## WGS reference dataset
+Finally, I conducted a multi-ancestry meta-analysis with the All of Us srWGS datasets as a reference panel. The analysis identified onlye one credible causal set (@tbl-susiex).
 
+```{r}
+#| label: tbl-susiex
+#| tbl-cap: SNPs in credible set from joint finemapping of all ancestry clusters using All of Us WGS as the reference panel. 
+
+susiex_acaf_summary <- read_tsv(here::here("reports/tables/SuSiEx/mdd_acaf_hg38_chr11_61600000-62000000.summary"), comment = "#")
+
+susiex_acaf_cs <- read_tsv(here::here("reports/tables/SuSiEx/mdd_acaf_hg38_chr11_61600000-62000000.cs"))
+
+susiex_acaf_cs |>
+  transmute(
+    `Credible set` = CS_ID,
+    SNP,
+    `Position (b38)` = BP,
+    PIP = round(CS_PIP, 3)
+  )
+```
 
 ## Acknowledgments 
 
