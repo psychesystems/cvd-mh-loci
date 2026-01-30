@@ -1,5 +1,5 @@
 ---
-title: Multi-ancestry finemapping of gene clusters implicated in cardiovascular disease and mental health
+title: "BHF REA4 Report: Application Number 25102"
 author: Mark James Adams, INCR
 date: 2026-01-31
 execute:
@@ -18,7 +18,9 @@ csl: human-genetics.csl
 
 <!-- layout information: https://quarto-dev.github.io/quarto-gallery/page-layout/tufte.html -->
 
-A genomic region containing a cluster of genes that regulate fatty acid desaturation has recently been found to have a strong association with major depressive disorder [@Adams_MDD2025_Cell]. However, it is unclear which variant in this region is the cause of the association. This project will use biobank whole genome-sequencing datasets to finemap common variants, catalogue rare variants, and understand shared genetic risk between cardiovascular disease and common psychiatric disorders.
+# Multi-ancestry finemapping of gene clusters implicated in cardiovascular disease and mental health
+
+A genomic region containing a cluster of genes that regulate fatty acid desaturation has recently been found to have a strong association with major depressive disorder [@Adams_MDD2025_Cell]. However, it is unclear which variant in this region is the cause of the association. This project used biobank whole genome-sequencing datasets to finemap common variants, catalogue rare variants, and understand shared genetic risk between cardiovascular disease and common psychiatric disorders.
 
 ```{r library}
 library(myvariant)
@@ -75,7 +77,6 @@ fads_region_annotations <- getVariants(
 )
 ```
 
-```
 
 ## Finemapping
 
@@ -187,7 +188,7 @@ acaf_polyfun |>
 
 ## Multi-ancestry finemapping
 
-Finally, I conducted a multi-ancestry meta-analysis with the All of Us srWGS datasets as a reference panel. The analysis identified onlye one credible causal set (@tbl-susiex).
+Finally, I conducted a multi-ancestry meta-analysis with the All of Us srWGS datasets as a reference panel. The analysis identified onlye one credible causal set (@tbl-susiex). The putative SNPs were all introns or upstream variants for FADS1 and FADS2.
 
 ```{r}
 #| label: tbl-susiex
@@ -198,6 +199,7 @@ susiex_acaf_summary <- read_tsv(here::here("reports/tables/SuSiEx/mdd_acaf_hg38_
 susiex_acaf_cs <- read_tsv(here::here("reports/tables/SuSiEx/mdd_acaf_hg38_chr11_61600000-62000000.cs"))
 
 susiex_acaf_cs |>
+  arrange(CS_ID, BP) |>
   transmute(
     `Credible set` = CS_ID,
     SNP,
@@ -205,6 +207,18 @@ susiex_acaf_cs |>
     PIP = round(CS_PIP, 3)
   )
 ```
+
+# Conclusions
+
+Using a multi-ancestry sequencing dataset provided a improvement for finemapping discovery in a complex genetic region. The results advanced over published analysis [@Adams_MDD2025_Cell] by showing that there is likely more than one causal variant in the region and suggesting that causal effects possibly differ between ancestry clusters. While the evidence for pinning down an exact causal variant was marginally improved, it confirms that the FADS region contains a complex and interesting gene set to investigate.
+
+# Project management and researcher development
+
+Support for this project has enabled data access, compute, and storage of the All of Us dataset using the cloud-based Researcher Workbench. I have focused on the All of Us cohort because it has a larger sample of non-European ancestry groups and a version of the whole genome sequencing dataset that is highly amenable to finemapping genome-wide association results. 
+
+The project was initially held back by organising billing set up to buy credits for the cloud computing platform. The initial plan was to set up invoicing through a purchase order. However, the scope of this project was below the threshold cloud providers would accept to create an invoicing account. There might be a need for a centre- or institute-level billing arrangement that allows smaller projects to group together to satisfy billing preferences.
+
+This project has been extremely beneficial to my scientific and career development. It allowed me to develop skills in two areas (finemapping and handling whole genome sequencing datasets). The experience has contributed in multiple ways. It has helped me feel confident in leading future work in this area. The knowledge I gained helped me write a workstream based on the ideas and datasets that I have been able to explore. It also put me in a better position to supervise a research student who is also working with these sequencing datasets.
 
 ## Acknowledgments 
 
